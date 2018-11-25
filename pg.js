@@ -1,24 +1,25 @@
 const { Client } = require('pg');
 const defaultCs = 'postgres://localhost:5432/manishy';
+
 const connectionString = process.env.DATABASE_URL||defaultCs;
 
-const client = new Client({
-     user: 'manishy',
-     database: 'manishy',
-     port: 5432,
-     host: 'localhost',
-     password: null,
-     binary: false,
-     ssl: false,
-     client_encoding: '',
-     replication: undefined,
-     isDomainSocket: false,
-     application_name: undefined,
-     fallback_application_name: undefined,
-     statement_timeout: false }
-   );
+// const client = new Client({
+//      user: 'manishy',
+//      database: 'manishy',
+//      port: 5432,
+//      host: 'localhost',
+//      password: null,
+//      binary: false,
+//      ssl: false,
+//      client_encoding: '',
+//      replication: undefined,
+//      isDomainSocket: false,
+//      application_name: undefined,
+//      fallback_application_name: undefined,
+//      statement_timeout: false }
+//    );
 
-// let client = new Client({connectionString});
+let client = new Client({connectionString});
 // console.log(client);
 
 const query = {
