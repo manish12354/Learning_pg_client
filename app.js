@@ -1,5 +1,6 @@
 const express = require("express");
 const cookieParser = require('cookie-parser');
+const Transaction = require('pg-transaction')
 const { Client } = require('pg')
 const app = express();
 app.use(express.urlencoded({
@@ -13,10 +14,19 @@ const getQuery = function(tableName){
   return `SELECT * FROM ${tableName};`;
 }
 
+const kill = function(err){
+  // tx.rollback();
+  // throw new Error();
+  console.log("Fat gya...");
+}
+
 const showTable = function(req,res){
   const defaultCs = 'postgres://localhost:5432/manishy';
   const connectionString = process.env.DATABASE_URL||defaultCs;
   const client = new Client({connectionString});
+
+var tx = new Transaction(client);
+tx.on('error', kill);
 
   let query = {
     text:
@@ -26,8 +36,10 @@ const showTable = function(req,res){
 
   client.connect();
   client.query(query, (err, response) => {
+    tx.begin();
     let selectQueryResult;
     if (err) {
+      tx.rollback();
       res.send("Invalid Data")
       console.log(err.stack)
     } else {
@@ -47,7 +59,6 @@ const showTable = function(req,res){
     client.end();
   })
 }
-// app.get("/", serveIndexPage);
 app.post("/getTable", showTable);
 
 app.use(express.json());
